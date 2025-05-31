@@ -5,6 +5,9 @@ inputs:
   slackWebhookUrl:
     description: 'The webhook URL for the Slack channel'
     required: true
+  headerPrefix:
+    description: 'The prefix to add to the header'
+    required: false
 runs:
   using: 'node22'
   main: 'dist/main.js'
