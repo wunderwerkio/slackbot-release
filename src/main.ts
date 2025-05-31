@@ -10,6 +10,7 @@ async function run() {
 
     const inputs: ActionInputs = {
       slackWebhookUrl: core.getInput("slackWebhookUrl"),
+      headerPrefix: core.getInput("headerPrefix"),
     };
 
     const context = github.context;
@@ -34,3 +35,5 @@ async function run() {
     }
   }
 }
+
+run();

@@ -27948,11 +27948,82 @@ var require_src = __commonJS({
 });
 
 // src/main.ts
-__toESM(require_core());
-__toESM(require_github());
+var core = __toESM(require_core());
+var github = __toESM(require_github());
 
 // src/notify.ts
-__toESM(require_src());
+var import_mack = __toESM(require_src());
+
+// src/webhook.ts
+async function postWebhook(webhookUrl, payload) {
+  const jsonPayload = JSON.stringify(payload);
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: jsonPayload
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to post webhook: ${response.statusText}`);
+  }
+  return response;
+}
+
+// src/notify.ts
+async function notifyChangelog({ inputs, release, repo }) {
+  const prefix = inputs.headerPrefix ? `${inputs.headerPrefix} ` : "";
+  const introBlock = {
+    type: "header",
+    text: {
+      type: "plain_text",
+      text: `:rocket: ${prefix}Release: ${release.name}`
+    }
+  };
+  const linkBlock = {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: `<${release.html_url}>`
+    }
+  };
+  const dividerBlock = { type: "divider" };
+  const bodyBlocks = await (0, import_mack.markdownToBlocks)(release.body);
+  return await postWebhook(inputs.slackWebhookUrl, {
+    text: `${release.name} has been released in ${repo.owner}/${repo.repo}`,
+    blocks: [introBlock, linkBlock, dividerBlock, ...bodyBlocks]
+  });
+}
+
+// src/main.ts
+async function run() {
+  try {
+    core.debug("Trying to send release notification to slack...");
+    const inputs = {
+      slackWebhookUrl: core.getInput("slackWebhookUrl"),
+      headerPrefix: core.getInput("headerPrefix")
+    };
+    const context2 = github.context;
+    const { eventName, repo } = context2;
+    if (eventName !== "release") {
+      throw new Error("This action can only be used in a release event");
+    }
+    const payload = context2.payload;
+    await notifyChangelog({
+      inputs,
+      release: payload.release,
+      repo
+    });
+    core.debug(`Successfully sent release notification to slack`);
+  } catch (error) {
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    } else {
+      core.setFailed("An unknown error occurred");
+    }
+  }
+}
+run();
 /*! Bundled license information:
 
 undici/lib/fetch/body.js:
