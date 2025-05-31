@@ -9,5 +9,5 @@ inputs:
     description: 'The prefix to add to the header'
     required: false
 runs:
-  using: 'node22'
+  using: 'node20'
   main: 'dist/main.js'
