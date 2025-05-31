@@ -1,0 +1,10 @@
+name: 'Slackbot for GitHub Release'
+description: 'Send a release notification to Slack'
+author: 'wunderwerk.io'
+inputs:
+  slackWebhookUrl:
+    description: 'The webhook URL for the Slack channel'
+    required: true
+runs:
+  using: 'node22'
+  main: 'dist/main.js'

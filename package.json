@@ -1,0 +1,27 @@
+{
+  "name": "slackbot-release",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Christian Foidl <christian@wunderwerk.io>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "@instantish/mack": "^1.2.0",
+    "@octokit/webhooks": "^14.0.0",
+    "@slack/types": "^2.14.0"
+  },
+  "devDependencies": {
+    "@octokit/webhooks-types": "^7.6.1",
+    "@slack/web-api": "^7.9.2",
+    "@types/node": "^22.15.29",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  }
+}
